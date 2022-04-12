@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Routes, Route, useRoutes } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 
 import CustomLink from "./components/CustomLink";
 import Chats from "./pages/Chats";
@@ -18,17 +19,64 @@ const NotFound = React.lazy(() => import("./pages/NotFound"));
 // {q: 'cats',src: 'caturday'}
 
 const App = () => {
-  const [user, setUser] = useState('')
+  const [user, setUser] = useState(null);
+
+  const RequiredAuth = ({children}) => {
+    if(!user){
+      return <Navigate to="/login" />
+    }
+    return children
+  }
   
   const routes = useRoutes([
-    { path: "/", element: <Home /> },
-    { path: "/login", element: <Login /> },
-    { path: "/register", element: <Register /> },
-    { path: "/dashboard", element: <Dashboard /> },
-    { path: "/post/:postId", element: <PostPage /> },
-    { path: "/comments", element: <Comments /> },
-    { path: "/profile", element: <Profile /> },
-    { path: "*", element: <NotFound /> },
+    { 
+      path: "/", 
+      element: <Home/>
+    },
+    { 
+      path: "/login", 
+      element: <Login setUser={setUser} />
+    },
+    { 
+      path: "/register", 
+      element: <Register /> 
+    },
+    { 
+      path: "/dashboard", 
+      element: (
+        <RequiredAuth>
+          <Dashboard />
+        </RequiredAuth>
+        )
+    },
+    { 
+      path: "/post/:postId", 
+      element: (
+        <RequiredAuth>
+          <PostPage /> 
+        </RequiredAuth>
+      )
+    },
+    { 
+      path: "/comments", 
+      element: (
+        <RequiredAuth>
+          <Comments /> 
+        </RequiredAuth>
+      )
+    },
+    { 
+      path: "/profile", 
+      element: (
+        <RequiredAuth>
+          <Profile />
+        </RequiredAuth>
+      ) 
+    },
+    { 
+      path: "*", 
+      element: <NotFound /> 
+    },
     { 
       path: "/messages", 
       element: <Messages />, 
