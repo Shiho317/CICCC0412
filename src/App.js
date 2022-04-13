@@ -99,7 +99,9 @@ const App = () => {
             <CustomLink to="/register">Register</CustomLink>
           </li>
           <li>
-            <CustomLink to="/dashboard">Dashboard</CustomLink>
+            <RequiredAuth>
+              <CustomLink to="/dashboard">Dashboard</CustomLink>
+            </RequiredAuth>
           </li>
         </ul>
         {/* <Routes>
